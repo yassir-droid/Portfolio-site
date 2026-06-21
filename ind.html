@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Rivera — Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E14;
+    --bg-soft:#11151F;
+    --ink:#EDEFF4;
+    --ink-dim:#9AA1B2;
+    --line:#222838;
+    --accent:#3DDC97;
+    --accent-dim:#246b4d;
+    --danger:#FF6B6B;
+    --radius:10px;
+    --maxw:920px;
+  }
+  [data-theme="light"]{
+    --bg:#F7F7F2;
+    --bg-soft:#FFFFFF;
+    --ink:#15171F;
+    --ink-dim:#5B6173;
+    --line:#E2E2DA;
+    --accent:#1C8F63;
+    --accent-dim:#cdeede;
+    --danger:#C9433D;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    transition:background .3s ease,color .3s ease;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.01em;margin:0;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--accent);
+    letter-spacing:.04em;
+  }
+
+  /* ---------- NAVBAR ---------- */
+  #navbar{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    padding:20px 0;
+    background:transparent;
+    border-bottom:1px solid transparent;
+    transition:background .25s ease, border-color .25s ease, padding .25s ease, backdrop-filter .25s ease;
+  }
+  #navbar.scrolled{
+    background:rgba(11,14,20,.78);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+  }
+  [data-theme="light"] #navbar.scrolled{
+    background:rgba(247,247,242,.85);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:15px;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:28px;list-style:none;margin:0;padding:0;}
+  .nav-links a{
+    font-size:14px;
+    color:var(--ink-dim);
+    position:relative;
+    padding:4px 0;
+    transition:color .2s ease;
+  }
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a.active{color:var(--ink);}
+  .nav-links a.active::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:-4px;
+    width:100%; height:2px;
+    background:var(--accent);
+    border-radius:2px;
+  }
+  .nav-right{display:flex;align-items:center;gap:18px;}
+  #theme-toggle{
+    width:38px;height:38px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--bg-soft);
+    color:var(--ink);
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  #theme-toggle:hover{border-color:var(--accent);transform:rotate(15deg);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding-top:90px;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size:clamp(34px,5vw,52px);
+    line-height:1.1;
+    margin:14px 0 18px;
+  }
+  .hero h1 .accent{color:var(--accent);}
+  .hero p{
+    color:var(--ink-dim);
+    font-size:16px;
+    line-height:1.65;
+    max-width:460px;
+    margin:0 0 28px;
+  }
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;
+    padding:12px 22px;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    cursor:pointer;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    display:inline-block;
+  }
+  .btn-primary{background:var(--accent);color:#06140E;border-color:var(--accent);}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-ghost{color:var(--ink);background:transparent;}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* terminal signature element */
+  .terminal{
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,.5);
+  }
+  .terminal-bar{
+    display:flex;
+    gap:8px;
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.r{background:#FF6157;} .dot.y{background:#FFBD2E;} .dot.g{background:#27C93F;}
+  .terminal-body{
+    padding:20px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;
+    line-height:1.8;
+    color:var(--ink-dim);
+    min-height:200px;
+  }
+  .terminal-body .prompt{color:var(--accent);}
+  .terminal-body .out{color:var(--ink);}
+  .cursor{display:inline-block;width:7px;height:14px;background:var(--accent);vertical-align:middle;animation:blink 1s step-end infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:110px 0;border-top:1px solid var(--line);}
+  .hero{border-top:none;}
+  .section-head{margin-bottom:48px;}
+  .section-head h2{font-size:28px;margin-top:8px;}
+
+  /* About */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+  .about-grid p{color:var(--ink-dim);line-height:1.75;}
+  .stack-list{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stack-list li{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--ink-dim);
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+  }
+
+  /* Projects */
+  .projects-grid{display:grid;gap:18px;}
+  .project-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px;
+    background:var(--bg-soft);
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .project-card:hover{border-color:var(--accent);transform:translateY(-3px);}
+  .project-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+  .project-card h3{font-size:18px;}
+  .project-tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);border:1px solid var(--accent-dim);padding:4px 9px;border-radius:20px;white-space:nowrap;}
+  .project-card p{color:var(--ink-dim);font-size:14px;line-height:1.65;margin:10px 0 0;}
+
+  /* Contact form */
+  .contact-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;}
+  .contact-info p{color:var(--ink-dim);line-height:1.7;}
+  .contact-info a.email{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:14px;}
+  form{display:flex;flex-direction:column;gap:18px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  label{font-size:13px;color:var(--ink-dim);font-family:'JetBrains Mono',monospace;}
+  input,textarea{
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    outline:none;
+    transition:border-color .2s ease;
+  }
+  input:focus,textarea:focus{border-color:var(--accent);}
+  input.invalid,textarea.invalid{border-color:var(--danger);}
+  .error-msg{
+    font-size:12.5px;
+    color:var(--danger);
+    min-height:14px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  textarea{resize:vertical;min-height:110px;}
+  .submit-row{display:flex;align-items:center;gap:16px;}
+  #form-status{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:30px 0;
+    color:var(--ink-dim);
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  @media (max-width:760px){
+    .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .stack-list{grid-template-columns:1fr 1fr;}
+    footer{flex-direction:column;gap:8px;text-align:center;}
+  }
+
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="wrap nav-inner">
+    <div class="logo">alex<span>.</span>rivera</div>
+    <ul class="nav-links">
+      <li><a href="#home" data-section="home" class="active">Home</a></li>
+      <li><a href="#about" data-section="about">About</a></li>
+      <li><a href="#projects" data-section="projects">Projects</a></li>
+      <li><a href="#contact" data-section="contact">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <button id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">// full-stack developer</p>
+      <h1>Building clean<br>interfaces, <span class="accent">end to end.</span></h1>
+      <p>I'm Alex Rivera — I design and build websites that load fast, feel considered, and don't get in the user's way. Currently open to internships and freelance work.</p>
+      <div class="btn-row">
+        <a href="#projects" class="btn btn-primary">View projects</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+    <div class="terminal" aria-hidden="true">
+      <div class="terminal-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      </div>
+      <div class="terminal-body" id="termBody"></div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <p class="eyebrow">01 — about</p>
+      <h2>A little about me</h2>
+    </div>
+    <div>
+      <p>I'm a developer who cares about the gap between "it works" and "it works well." Most of my time goes into JavaScript-driven interfaces — the small interactions that make a site feel responsive rather than static.</p>
+      <ul class="stack-list">
+        <li>HTML5 &amp; CSS3</li>
+        <li>JavaScript (ES6+)</li>
+        <li>DOM &amp; Web APIs</li>
+        <li>Responsive Design</li>
+        <li>Git &amp; GitHub</li>
+        <li>REST APIs</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">02 — projects</p>
+      <h2>Selected work</h2>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-top">
+          <h3>Personal Portfolio v1</h3>
+          <span class="project-tag">HTML / CSS</span>
+        </div>
+        <p>A static three-section site — About, Projects, Contact — built and deployed as my first hosted website.</p>
+      </div>
+      <div class="project-card">
+        <div class="project-top">
+          <h3>Interactive Portfolio v2</h3>
+          <span class="project-tag">JavaScript</span>
+        </div>
+        <p>This site. Adds a scroll-aware navbar, a validated contact form, and a persisted dark mode toggle using the DOM and localStorage.</p>
+      </div>
+      <div class="project-card">
+        <div class="project-top">
+          <h3>Task Tracker</h3>
+          <span class="project-tag">JS / LocalStorage</span>
+        </div>
+        <p>A small to-do app exploring state persistence in the browser without a backend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap contact-grid">
+    <div class="contact-info">
+      <p class="eyebrow">03 — contact</p>
+      <h2>Let's work together</h2>
+      <p>Have a project in mind, or just want to say hi? The form validates as you go — fill it out and I'll get back to you.</p>
+      <p><a class="email" href="mailto:hello@alexrivera.dev">hello@alexrivera.dev</a></p>
+    </div>
+    <form id="contactForm" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your name">
+        <div class="error-msg" id="nameError"></div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" placeholder="you@example.com">
+        <div class="error-msg" id="emailError"></div>
+      </div>
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Tell me a bit about what you need..."></textarea>
+        <div class="error-msg" id="messageError"></div>
+      </div>
+      <div class="submit-row">
+        <button type="submit" class="btn btn-primary">Send message</button>
+        <span id="form-status"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;">
+    <span>© 2026 Alex Rivera</span>
+    <span>Built with HTML, CSS &amp; JavaScript</span>
+  </div>
+</footer>
+
+<script>
+/* ===== 1. DYNAMIC NAVBAR ===== */
+const navbar = document.getElementById('navbar');
+const sections = document.querySelectorAll('section, header');
+const navLinks = document.querySelectorAll('.nav-links a');
+
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+
+  // highlight active section
+  let current = 'home';
+  sections.forEach(sec => {
+    const top = sec.offsetTop - 120;
+    if (window.scrollY >= top) current = sec.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.toggle('active', link.dataset.section === current);
+  });
+});
+
+/* ===== 2. CONTACT FORM VALIDATION ===== */
+const form = document.getElementById('contactForm');
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const messageInput = document.getElementById('message');
+const status = document.getElementById('form-status');
+
+function setError(input, errorId, message){
+  document.getElementById(errorId).textContent = message;
+  input.classList.toggle('invalid', !!message);
+}
+
+function validateName(){
+  const v = nameInput.value.trim();
+  if (!v){ setError(nameInput,'nameError','Name is required.'); return false; }
+  setError(nameInput,'nameError',''); return true;
+}
+
+function validateEmail(){
+  const v = emailInput.value.trim();
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!v){ setError(emailInput,'emailError','Email is required.'); return false; }
+  if (!pattern.test(v)){ setError(emailInput,'emailError','Enter a valid email address.'); return false; }
+  setError(emailInput,'emailError',''); return true;
+}
+
+function validateMessage(){
+  const v = messageInput.value.trim();
+  if (!v){ setError(messageInput,'messageError','Message is required.'); return false; }
+  if (v.length < 10){ setError(messageInput,'messageError','Message should be at least 10 characters.'); return false; }
+  setError(messageInput,'messageError',''); return true;
+}
+
+nameInput.addEventListener('blur', validateName);
+emailInput.addEventListener('blur', validateEmail);
+messageInput.addEventListener('blur', validateMessage);
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const ok = [validateName(), validateEmail(), validateMessage()].every(Boolean);
+  if (ok){
+    status.textContent = 'Message sent — thank you!';
+    form.reset();
+    setTimeout(() => status.textContent = '', 4000);
+  } else {
+    status.textContent = '';
+  }
+});
+
+/* ===== 3. DARK MODE TOGGLE (with LocalStorage) ===== */
+const toggleBtn = document.getElementById('theme-toggle');
+const root = document.documentElement;
+
+function applyTheme(theme){
+  root.setAttribute('data-theme', theme);
+  toggleBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+  localStorage.setItem('theme', theme);
+}
+
+const savedTheme = localStorage.getItem('theme') || 'dark';
+applyTheme(savedTheme);
+
+toggleBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+});
+
+/* ===== Terminal typing effect (hero signature) ===== */
+const termBody = document.getElementById('termBody');
+const lines = [
+  {p:'~ $ ', t:'whoami', out:false},
+  {p:'', t:'alex-rivera — full-stack dev', out:true},
+  {p:'~ $ ', t:'cat skills.txt', out:false},
+  {p:'', t:'JavaScript · DOM · APIs · Git', out:true},
+  {p:'~ $ ', t:'status', out:false},
+  {p:'', t:'open to internships ✓', out:true},
+];
+
+async function typeLine(el, text, speed=38){
+  for (let ch of text){
+    el.textContent += ch;
+    await new Promise(r => setTimeout(r, speed));
+  }
+}
+
+async function runTerminal(){
+  for (const line of lines){
+    const row = document.createElement('div');
+    if (!line.out){
+      const prompt = document.createElement('span');
+      prompt.className = 'prompt';
+      prompt.textContent = line.p;
+      const cmd = document.createElement('span');
+      row.appendChild(prompt);
+      row.appendChild(cmd);
+      termBody.appendChild(row);
+      await typeLine(cmd, line.t);
+      await new Promise(r => setTimeout(r, 300));
+    } else {
+      row.className = 'out';
+      row.textContent = line.t;
+      termBody.appendChild(row);
+      await new Promise(r => setTimeout(r, 400));
+    }
+  }
+  const cursorRow = document.createElement('div');
+  const prompt = document.createElement('span');
+  prompt.className = 'prompt';
+  prompt.textContent = '~ $ ';
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  cursorRow.appendChild(prompt);
+  cursorRow.appendChild(cursor);
+  termBody.appendChild(cursorRow);
+}
+runTerminal();
+</script>
+</body>
+</html>
